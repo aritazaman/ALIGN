@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: #ffffff;
+  font-family: 'Montserrat', sans-serif;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.card {
+  text-align: center;
+  padding: 40px 50px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border: 3px solid #6b1e58;
+  max-width: 320px;
+
+}
+
+h1 {
+  margin-top: 0;
+  margin-bottom: 25px;
+  color: #6b1e58;
+  font-size: 28px;
+}
+
+#status {
+  font-size: 22px;
+  font-weight: 600;
+  padding: 12px 18px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+}
+
+/* Good posture state */
+.good {
+  background-color: #fff4ec;
+  color: #6b1e58;
+  border: 2px solid #6b1e58;
+}
+
+/* Bad posture state */
+.bad {
+  background-color: #6b1e58;
+  color: white;
+  border: 2px solid #6b1e58;
+}
+
+/* Waiting state */
+.waiting {
+  background-color: #f3f3f3;
+  color: #777;
+  border: 2px dashed #6b1e58;
+}
+
+#angle {
+  font-size: 16px;
+  color: #555;
+  margin: 0;
+}
+
+.header {
+  width: 100%;
+  height: 100px;
+  background-color: #6b1e58;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo {
+  height: 100px; /* adjust if needed */
+}
+
+.card {
+  margin-top: 60px;
+  text-align: center;
+  padding: 40px 50px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border: 3px solid #6b1e58;
+  max-width: 320px;
+}
