@@ -31,9 +31,7 @@ async function startServer() {
     parser.on('data', (line) => {
       console.log("From Arduino:", line);
 
-      if (line.includes("SLOUCH")) latestPosture = "slouch";
-      else if (line.includes("GOOD")) latestPosture = "good";
-      else latestPosture = line; // optional: send raw angle
+    latestPosture = line.trim();
 
       // Broadcast to all connected WebSocket clients
       wss.clients.forEach(client => {

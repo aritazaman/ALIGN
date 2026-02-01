@@ -1,3 +1,43 @@
+const ctx = document.getElementById("postureChart").getContext("2d");
+
+const MAX_POINTS = 50;
+
+const postureChart = new Chart(ctx, {
+  type: "line",
+  data: {
+    labels: [],
+    datasets: [{
+      label: "Y-Axis Acceleration (AY)",
+      data: [],
+      borderColor: "#6b1e58",
+      backgroundColor: "rgba(107, 30, 88, 0.1)",
+      borderWidth: 2,
+      tension: 0.25,
+      pointRadius: 0
+    }]
+  },
+  options: {
+    animation: false,
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: "Time"
+        }
+        
+      },
+      y: {
+        title: {
+          display: true,
+          text: "AY Value"
+        }
+      }
+    }
+  }
+});
+
 const statusDiv = document.getElementById("status");
 // const angleText = document.getElementById("angle");
 
@@ -26,20 +66,44 @@ statusDiv.className = "waiting";
 
 const socket = new WebSocket("ws://localhost:8080");
 
-socket.onmessage = function(event) {
-  const data = event.data.trim().toLowerCase(); // trim whitespace and lowercase
-  let currentPosture = lastPosture; 
-  
-  if (data.includes("good")) {
-    statusDiv.textContent = "Good Posture";
-    statusDiv.className = "good";
-    currentPosture = "good";
+function addAYPoint(ay) {
+  const timeLabel = new Date().toLocaleTimeString();
 
-  } else if (data.includes("slouch")) {
+  postureChart.data.labels.push(timeLabel);
+  postureChart.data.datasets[0].data.push(ay);
+
+  if (postureChart.data.labels.length > MAX_POINTS) {
+    postureChart.data.labels.shift();
+    postureChart.data.datasets[0].data.shift();
+  }
+
+  postureChart.update();
+}
+
+
+socket.onmessage = function(event) {
+  let currentPosture = lastPosture; 
+
+  const raw = event.data;
+
+  // Example: "AY:15234,STATUS:GOOD"
+  const parts = raw.split(",");
+  const ayValue = parseInt(parts[0].split(":")[1]);
+  const status = parts[1].split(":")[1];
+  addAYPoint(ayValue);
+
+  
+  if (status === "GOOD") {
+  statusDiv.textContent = "Good Posture";
+  statusDiv.className = "good";
+  currentPosture = "good";
+}
+
+  else if (status === "SLOUCH") {
     statusDiv.textContent = "Fix Your Posture";
     statusDiv.className = "bad";
     currentPosture = "bad";
-  
+
     if (
       lastPosture === "good" &&
       soundEnabled &&
@@ -49,13 +113,6 @@ socket.onmessage = function(event) {
       alertSound.play();
       lastAlertTime = Date.now();
     }
-
-
-
-  } else {
-    // Optional: show angle if Arduino sends a number
-    // angleText.text
-    // Content = "Angle: " + data;
   }
 
   lastPosture = currentPosture;
