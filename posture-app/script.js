@@ -1,6 +1,5 @@
 const ctx = document.getElementById("postureChart").getContext("2d");
 
-const MAX_POINTS = 50;
 
 const postureChart = new Chart(ctx, {
   type: "line",
@@ -43,6 +42,8 @@ const statusDiv = document.getElementById("status");
 
 let lastPosture = "good";
 let lastAlertTime = 0; 
+let sessionActive = true;
+
 
 
 const alertSound = document.getElementById("chimeAudio");
@@ -60,6 +61,15 @@ enableBtn.addEventListener("click", () => {
   });
 });
 
+const endSessionBtn = document.getElementById("endSessionBtn");
+
+endSessionBtn.addEventListener("click", () => {
+  sessionActive = false;
+  endSessionBtn.textContent = "Session Ended";
+  endSessionBtn.disabled = true;
+});
+
+
 
 statusDiv.textContent = "Waiting for posture data...";
 statusDiv.className = "waiting";
@@ -67,18 +77,19 @@ statusDiv.className = "waiting";
 const socket = new WebSocket("ws://localhost:8080");
 
 function addAYPoint(ay) {
+  if (!sessionActive) return; // stops updating if session ended
+
   const timeLabel = new Date().toLocaleTimeString();
 
+  // Add the new point
   postureChart.data.labels.push(timeLabel);
   postureChart.data.datasets[0].data.push(ay);
 
-  if (postureChart.data.labels.length > MAX_POINTS) {
-    postureChart.data.labels.shift();
-    postureChart.data.datasets[0].data.shift();
-  }
+  // DON'T remove old points — we want all data to stay
 
   postureChart.update();
 }
+
 
 
 socket.onmessage = function(event) {

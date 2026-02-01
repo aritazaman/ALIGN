@@ -102,3 +102,25 @@ h1 {
   box-sizing: border-box;
 
 }
+
+#endSessionBtn {
+  margin-top: 16px;
+  margin-bottom: 32px;
+
+  padding: 10px 18px;
+  font-size: 14px;
+  font-family: 'Montserrat', sans-serif;
+
+  background-color: white;
+  color: #6b1e58;
+  border: 2px solid #6b1e58;
+  border-radius: 10px;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#endSessionBtn:hover {
+  background-color: #6b1e58;
+  color: white;
+}
